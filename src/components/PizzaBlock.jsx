@@ -1,28 +1,33 @@
-import React from 'react'
+import React from 'react';
+import PizzaBlockTypes from './PizzaBlockTypes';
+import PizzaBlockSizes from './PizzaBlockSizes';
 
-export default function PizzaBlock({ title, price, imgURL }) {
+
+export default function PizzaBlock({ title, price, imageUrl, types, sizes }) {
+
     return (
-        <div class="pizza-block">
+        <div className="pizza-block">
             <img
-                class="pizza-block__image"
-                src="https://dodopizza-a.akamaihd.net/static/Img/Products/Pizza/ru-RU/b750f576-4a83-48e6-a283-5a8efb68c35d.jpg"
+                className="pizza-block__image"
+                src={imageUrl}
                 alt="Pizza"
             />
-            <h4 class="pizza-block__title">Чізбургер-піца</h4>
-            <div class="pizza-block__selector">
+            <h4 className="pizza-block__title">{title}</h4>
+            <div className="pizza-block__selector">
                 <ul>
-                    <li class="active">тонке</li>
-                    <li>традиційне</li>
+                    <PizzaBlockTypes
+                        types={types}
+                    />
                 </ul>
                 <ul>
-                    <li class="active">26 см.</li>
-                    <li>30 см.</li>
-                    <li>40 см.</li>
+                    <PizzaBlockSizes
+                        sizes={sizes}
+                    />
                 </ul>
             </div>
-            <div class="pizza-block__bottom">
-                <div class="pizza-block__price">від 395 ₴</div>
-                <div class="button button--outline button--add">
+            <div className="pizza-block__bottom">
+                <div className="pizza-block__price">від {price} ₴</div>
+                <button className="button button--outline button--add">
                     <svg
                         width="12"
                         height="12"
@@ -36,8 +41,8 @@ export default function PizzaBlock({ title, price, imgURL }) {
                         />
                     </svg>
                     <span>Додати</span>
-                    <i>2</i>
-                </div>
+                    <i>1</i>
+                </button>
             </div>
         </div>
     )

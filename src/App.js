@@ -1,35 +1,44 @@
 import './scss/app.scss';
 
-import Header from './components/Header';
-import Categories from './components/Categories';
-import Sort from './components/Sort';
-import PizzaBlock from './components/PizzaBlock';
+import Header from './components/Header.jsx';
+import Categories from './components/Categiries.jsx';
+import Sort from './components/Sort.jsx';
+import PizzaBlock from './components/PizzaBlock.jsx';
+import pizzas from './assets/pizzas.json';
+
 
 
 function App() {
+  const renderPizzas = pizzas.map((item, index) => {
+    return (
+      <PizzaBlock
+        key={index}
+        {...item}
+      />
+    )
+  });
+
+
   return (
-    <div class="wrapper">
+    <div className="wrapper">
       <Header />
-      <div class="content">
-        <div class="container">
-          <div class="content__top">
+      <div className="content">
+        <div className="container">
+          <div className="content__top">
             <Categories />
             <Sort />
           </div>
-          <h2 class="content__title">Всі піцци</h2>
-          <div class="content__items">
-            <PizzaBlock />
-            <PizzaBlock />
-            <PizzaBlock />
-            <PizzaBlock />
-            <PizzaBlock />
-            <PizzaBlock />
-            <PizzaBlock />
-            <PizzaBlock />
-            <PizzaBlock />
-            <PizzaBlock />
-            <PizzaBlock />
-            <PizzaBlock />
+          <h2 className="content__title">Всі піцци</h2>
+          <div className="content__items">
+            {pizzas.map((item, index) => {
+              return (
+                <PizzaBlock
+                  key={index}
+                  {...item}
+                />
+              )
+            })}
+
           </div>
         </div>
       </div>
