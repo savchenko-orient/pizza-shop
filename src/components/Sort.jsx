@@ -1,6 +1,27 @@
 import React from 'react'
 
 export default function Sort() {
+    const sortCategories = ['популярністю', "ціною", "алфавітом"];
+
+    const [open, setIsOpen] = React.useState(false);
+    const [activeIndex, setActiveIndex] = React.useState(0);
+    const onClickActiveSortCategory = (index) => {
+        setActiveIndex(index);
+        setIsOpen(!open)
+    };
+
+    const renderSortCategories = () => {
+        return sortCategories.map((item, index) => (
+            <li
+                onClick={() => onClickActiveSortCategory(index)}
+                className={activeIndex === index ? 'active' : ''}
+                key={index}
+            >
+                {item}
+            </li>
+        ))
+    };
+
     return (
         <div className="sort">
             <div className="sort__label">
@@ -17,15 +38,15 @@ export default function Sort() {
                     />
                 </svg>
                 <b>Сортувати за:</b>
-                <span>популярністю</span>
+                <span onClick={() => setIsOpen(!open)}>{sortCategories[activeIndex]}</span>
             </div>
-            <div className="sort__popup">
-                <ul>
-                    <li className="active">популярністю</li>
-                    <li>ціною</li>
-                    <li>алфавітом</li>
-                </ul>
-            </div>
+            {open &&
+                <div className="sort__popup">
+                    <ul>
+                        {renderSortCategories()}
+                    </ul>
+                </div>
+            }
         </div>
     )
 }

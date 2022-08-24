@@ -9,15 +9,12 @@ import pizzas from './assets/pizzas.json';
 
 
 function App() {
-  const renderPizzas = pizzas.map((item, index) => {
-    return (
-      <PizzaBlock
-        key={index}
-        {...item}
-      />
-    )
-  });
-
+  // function byField(field) {
+  //   return (a, b) => a[field] > b[field] ? 1 : -1;
+  // }
+  // function fromBigToSmall(arr) {
+  //   return arr.sort(byField('price'));
+  // }
 
   return (
     <div className="wrapper">
@@ -30,6 +27,14 @@ function App() {
           </div>
           <h2 className="content__title">Всі піцци</h2>
           <div className="content__items">
+            {/* {fromBigToSmall(pizzas).map((item, index) => {
+              return (
+                <PizzaBlock
+                  key={index}
+                  {...item}
+                />
+              )
+            })} */}
             {pizzas.map((item, index) => {
               return (
                 <PizzaBlock

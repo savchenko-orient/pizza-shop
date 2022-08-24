@@ -4,7 +4,6 @@ import PizzaBlockSizes from './PizzaBlockSizes';
 
 
 export default function PizzaBlock({ title, price, imageUrl, types, sizes }) {
-
     return (
         <div className="pizza-block">
             <img
