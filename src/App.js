@@ -18,6 +18,7 @@ function App() {
   // }
 
   const [items, setItems] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
     async function fetchData() {
@@ -26,6 +27,7 @@ function App() {
           axios.get('https://630a2c2c324991003281df9d.mockapi.io/items')
         ]);
         setItems(itemsResponse.data);
+        setIsLoading(false);
       } catch (error) {
         alert('Помилка під час запиту данних!');
         console.error('error: ', error);
@@ -33,6 +35,9 @@ function App() {
     }
     fetchData();
   }, []);
+
+
+
 
   return (
     <div className="wrapper">
@@ -53,10 +58,11 @@ function App() {
                 />
               )
             })} */}
-            {items.map((item, index) => {
+            {(isLoading ? [...Array(12)] : items).map((item, index) => {
               return (
                 <PizzaBlock
                   key={index}
+                  isLoading={isLoading}
                   {...item}
                 />
               )
