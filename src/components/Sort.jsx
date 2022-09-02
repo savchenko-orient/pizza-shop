@@ -1,25 +1,23 @@
 import React from 'react'
 
-export default function Sort() {
-    const sortCategories = ['популярністю', "ціною", "алфавітом"];
-
-    const [open, setIsOpen] = React.useState(false);
-    const [activeIndex, setActiveIndex] = React.useState(0);
-    const onClickActiveSortCategory = (index) => {
-        setActiveIndex(index);
-        setIsOpen(!open)
-    };
+export default function Sort({ value, onChangeSortType, isOpen, onClickSortType }) {
+    const sortCategories = [
+        { name: 'популярністю', sortProperty: 'rating' },
+        { name: 'зростанням ціни', sortProperty: 'price' },
+        { name: 'спаданням ціни', sortProperty: '-price' },
+        { name: 'алфавітом', sortProperty: 'title' }];
 
     const renderSortCategories = () => {
-        return sortCategories.map((item, index) => (
+        return sortCategories.map((obj, i) => (
             <li
-                onClick={() => onClickActiveSortCategory(index)}
-                className={activeIndex === index ? 'active' : ''}
-                key={index}
+                onClick={() => onChangeSortType(obj)}
+                className={value.sortProperty === obj.sortProperty ? 'active' : ''}
+                key={i}
             >
-                {item}
+                {obj.name}
             </li>
         ))
+
     };
 
     return (
@@ -38,9 +36,9 @@ export default function Sort() {
                     />
                 </svg>
                 <b>Сортувати за:</b>
-                <span onClick={() => setIsOpen(!open)}>{sortCategories[activeIndex]}</span>
+                <span onClick={() => onClickSortType(!isOpen)}>{value.name}</span>
             </div>
-            {open &&
+            {isOpen &&
                 <div className="sort__popup">
                     <ul>
                         {renderSortCategories()}

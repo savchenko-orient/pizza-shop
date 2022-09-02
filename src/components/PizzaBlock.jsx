@@ -1,27 +1,19 @@
 import React from 'react';
-import ContentLoader from "react-content-loader";
 import PizzaBlockTypes from './PizzaBlockTypes';
 import PizzaBlockSizes from './PizzaBlockSizes';
+import Sceleton from './Sceleton';
 
 
-export default function PizzaBlock({ title, price, imageUrl, types, sizes, isLoading }) {
-    return (
+export default function PizzaBlock({ title, price, imageUrl, types, sizes, isLoading, onPlus }) {
+    const obj = { title, price, imageUrl, types, sizes };
+    const onClickPlus = () => {
+        onPlus(obj)
+    }
+
+    return (<div className="pizza-block-wrapper">
         <div className="pizza-block">
             {isLoading ? (
-                <ContentLoader
-                    speed={2}
-                    width={280}
-                    height={459}
-                    viewBox="0 0 280 459"
-                    backgroundColor="#f3f3f3"
-                    foregroundColor="#ecebeb"
-                >
-                    <circle cx="136" cy="123" r="119" />
-                    <rect x="3" y="422" rx="11" ry="11" width="90" height="30" />
-                    <rect x="5" y="322" rx="20" ry="20" width="265" height="75" />
-                    <rect x="142" y="417" rx="20" ry="20" width="139" height="42" />
-                    <rect x="46" y="271" rx="11" ry="11" width="181" height="35" />
-                </ContentLoader>
+                <Sceleton />
             ) : (
                 <>
                     <img
@@ -29,7 +21,9 @@ export default function PizzaBlock({ title, price, imageUrl, types, sizes, isLoa
                         src={imageUrl}
                         alt="Pizza"
                     />
-                    <h4 className="pizza-block__title">{title}</h4>
+                    <h4 className="pizza-block__title">
+                        {title}
+                    </h4>
                     <div className="pizza-block__selector">
                         <ul>
                             <PizzaBlockTypes
@@ -44,7 +38,9 @@ export default function PizzaBlock({ title, price, imageUrl, types, sizes, isLoa
                     </div>
                     <div className="pizza-block__bottom">
                         <div className="pizza-block__price">від {price} ₴</div>
-                        <button className="button button--outline button--add">
+                        <button
+                            onClick={onClickPlus}
+                            className="button button--outline button--add">
                             <svg
                                 width="12"
                                 height="12"
@@ -64,5 +60,6 @@ export default function PizzaBlock({ title, price, imageUrl, types, sizes, isLoa
                 </>
             )}
         </div>
+    </div>
     )
 }
