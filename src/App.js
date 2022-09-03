@@ -11,7 +11,7 @@ import Cart from './pages/Cart';
 
 function App() {
   const [cartItems, setCartItems] = React.useState([]);
-
+  const [searchValue, setSearchValue] = React.useState('');
   const onAddToCart = async (obj) => {
     setCartItems((prev) => [...prev, obj]);  /*prev - это предыдущие данные из переменной в useState. в данном случае из cartItems*/
   };
@@ -19,7 +19,7 @@ function App() {
 
   return (
     <div className="wrapper">
-      <Header />
+      <Header searchValue={searchValue} setSearchValue={setSearchValue} />
       <div className="content">
 
         <Routes>
@@ -27,6 +27,7 @@ function App() {
             exact path="/"
             element={
               <Home
+                searchValue={searchValue}
                 onAddToCart={onAddToCart}
               />
             }

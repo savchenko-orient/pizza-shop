@@ -1,13 +1,13 @@
 import React from 'react'
 import axios from 'axios';
 
-
 import PizzaBlock from '../components/PizzaBlock';
 import Categories from '../components/Categiries';
 import Sort from '../components/Sort';
+import Pagination from '../components/Pagination';
 
 
-export default function Home({ onAddToCart }) {
+export default function Home({ onAddToCart, searchValue }) {
     const categories = ['Всі', "М'ясні", 'Вегетаріанські', 'Гриль', 'Гострі', 'Закриті',];
 
 
@@ -15,6 +15,7 @@ export default function Home({ onAddToCart }) {
     const [isLoading, setIsLoading] = React.useState(true);
     const [category, setCategory] = React.useState(0);
     const [open, setIsOpen] = React.useState(false);
+    const [currentPage, setCurrentPage] = React.useState(1);
     const [sortType, setSortType] = React.useState({
         name: 'популярністю', sortProperty: 'rating'
     });
@@ -22,18 +23,20 @@ export default function Home({ onAddToCart }) {
         setSortType(obj);
         setIsOpen(!open);
     }
+    console.log(currentPage);
 
 
     React.useEffect(() => {
         const sortBy = sortType.sortProperty.replace('-', '');
         const order = sortType.sortProperty.includes('-') ? 'desc' : 'asc';
         // asc(ASCending) - сортировка по возрастанию, desc(DESCending) - по убыванию
+        const search = searchValue ? `&search=${searchValue}` : '';
 
         async function fetchData() {
             try {
                 setIsLoading(true);
                 const [itemsResponse] = await Promise.all([
-                    axios.get(`https://630a2c2c324991003281df9d.mockapi.io/items?category=${category}&sortBy=${sortBy}&order=${order}`)
+                    axios.get(`https://630a2c2c324991003281df9d.mockapi.io/items?page=${currentPage}&limit=4&category=${category}&sortBy=${sortBy}&order=${order}${search}`)
                 ]);
                 setItems(itemsResponse.data);
                 setIsLoading(false);
@@ -44,7 +47,10 @@ export default function Home({ onAddToCart }) {
         }
         fetchData();
         window.scrollTo(0, 0);
-    }, [category, sortType]);
+    }, [category, sortType, searchValue, currentPage]);
+
+
+
 
     return (
         <div className="container">
@@ -75,8 +81,8 @@ export default function Home({ onAddToCart }) {
                         />
                     )
                 })}
-
             </div>
+            <Pagination onChangePage={(number) => setCurrentPage(number)} />
         </div>
     )
 }
