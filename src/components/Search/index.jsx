@@ -1,7 +1,17 @@
 import React from 'react'
+import { useSelector, useDispatch } from 'react-redux';
+import { setSearchValue } from '../../redux/slices/searchSlice';
+// import { SearchContext } from '../../App';
 import styles from './Search.module.scss';
 
-export default function Search({ searchValue, setSearchValue }) {
+export default function Search() {
+    // const { searchValue, setSearchValue } = React.useContext(SearchContext);
+    const searchValue = useSelector((state) => state.search.searchValue);
+    const dispatch = useDispatch();
+    const onChangeSearchValue = (value) => {
+        console.log('value: ', value);
+        dispatch(setSearchValue(value))
+    }
 
     return (
         <div className={styles.root}>
@@ -40,14 +50,14 @@ export default function Search({ searchValue, setSearchValue }) {
             </svg>
             <input
                 value={searchValue}
-                onChange={(event) => setSearchValue(event.target.value)}
+                onChange={(event) => onChangeSearchValue(event.target.value)}
                 className={styles.search}
                 placeholder="Поиск пиццы..."
             />
             {searchValue && (
                 <svg
                     className={styles.clearIcon}
-                    onClick={() => setSearchValue('')}
+                    onClick={() => dispatch(setSearchValue(''))}
                     viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg">
                     <path d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z" />

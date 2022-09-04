@@ -50,10 +50,10 @@ export default function CartBlock({ cartItems }) {
                                 <path d="M7 13L1 6.93015L6.86175 1" stroke="#D3D3D3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
 
-                            <span>Вернуться назад</span>
+                            <span>Повернутись назад</span>
                         </Link>
                         <div className="button pay-btn">
-                            <span>Оплатить сейчас</span>
+                            <span>Сплатити зараз</span>
                         </div>
                     </div>
                 </div>

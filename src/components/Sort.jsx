@@ -36,7 +36,7 @@ export default function Sort({ value, onChangeSortType, isOpen, onClickSortType 
                     />
                 </svg>
                 <b>Сортувати за:</b>
-                <span onClick={() => onClickSortType(!isOpen)}>{value.name}</span>
+                <span onClick={onClickSortType}>{value.name}</span>
             </div>
             {isOpen &&
                 <div className="sort__popup">
