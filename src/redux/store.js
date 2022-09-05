@@ -5,6 +5,6 @@ import search from './slices/searchSlice.js';
 export const store = configureStore({
     reducer: {
         filter: filter,
-        search: search
+        search: search,
     },
 })

@@ -1,23 +1,38 @@
 import React from 'react'
+import { useSelector, useDispatch } from 'react-redux';
 
-export default function Sort({ value, onChangeSortType, isOpen, onClickSortType }) {
+import { setSortType, setIsOpen } from '../redux/slices/filterSlice';
+
+
+export default function Sort() {
     const sortCategories = [
         { name: 'популярністю', sortProperty: 'rating' },
         { name: 'зростанням ціни', sortProperty: 'price' },
         { name: 'спаданням ціни', sortProperty: '-price' },
         { name: 'алфавітом', sortProperty: 'title' }];
 
+    const dispatch = useDispatch();
+    const { sortType, open } = useSelector((state) => state.filter);
+
+    const onChangeSortType = (obj) => {
+        dispatch(setSortType(obj));
+        onClickSortType();
+    }
+    const onClickSortType = () => {
+        dispatch(setIsOpen(!open));
+    }
+
+
     const renderSortCategories = () => {
         return sortCategories.map((obj, i) => (
             <li
                 onClick={() => onChangeSortType(obj)}
-                className={value.sortProperty === obj.sortProperty ? 'active' : ''}
+                className={sortType.sortProperty === obj.sortProperty ? 'active' : ''}
                 key={i}
             >
                 {obj.name}
             </li>
         ))
-
     };
 
     return (
@@ -36,9 +51,9 @@ export default function Sort({ value, onChangeSortType, isOpen, onClickSortType 
                     />
                 </svg>
                 <b>Сортувати за:</b>
-                <span onClick={onClickSortType}>{value.name}</span>
+                <span onClick={onClickSortType}>{sortType.name}</span>
             </div>
-            {isOpen &&
+            {open &&
                 <div className="sort__popup">
                     <ul>
                         {renderSortCategories()}

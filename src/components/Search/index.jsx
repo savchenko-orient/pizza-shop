@@ -1,17 +1,38 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { setSearchValue } from '../../redux/slices/searchSlice';
-// import { SearchContext } from '../../App';
 import styles from './Search.module.scss';
+import debounce from 'lodash.debounce';
+
 
 export default function Search() {
-    // const { searchValue, setSearchValue } = React.useContext(SearchContext);
+    const [value, setValue] = React.useState('');
     const searchValue = useSelector((state) => state.search.searchValue);
+    const inputRef = React.useRef();
     const dispatch = useDispatch();
-    const onChangeSearchValue = (value) => {
-        console.log('value: ', value);
-        dispatch(setSearchValue(value))
+
+    const debouncedSearch = React.useMemo(
+        () =>
+            debounce(val => {
+                dispatch(setSearchValue(val));
+            }, 500),
+        [dispatch]
+    );
+    const onChangeSearchValue = React.useCallback(
+        value => {
+            setValue(value)
+            debouncedSearch(value);
+        },
+        [debouncedSearch]
+    );
+
+    const onClickClear = () => {
+        dispatch(setSearchValue(''));
+        inputRef.current.focus();
     }
+
+    React.useEffect(() => {
+    }, []);
 
     return (
         <div className={styles.root}>
@@ -49,7 +70,8 @@ export default function Search() {
                 />
             </svg>
             <input
-                value={searchValue}
+                ref={inputRef}
+                value={value}
                 onChange={(event) => onChangeSearchValue(event.target.value)}
                 className={styles.search}
                 placeholder="Поиск пиццы..."
@@ -57,7 +79,7 @@ export default function Search() {
             {searchValue && (
                 <svg
                     className={styles.clearIcon}
-                    onClick={() => dispatch(setSearchValue(''))}
+                    onClick={onClickClear}
                     viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg">
                     <path d="M10 8.586L2.929 1.515 1.515 2.929 8.586 10l-7.071 7.071 1.414 1.414L10 11.414l7.071 7.071 1.414-1.414L11.414 10l7.071-7.071-1.414-1.414L10 8.586z" />
