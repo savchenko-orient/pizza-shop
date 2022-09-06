@@ -31,9 +31,6 @@ export default function Search() {
         inputRef.current.focus();
     }
 
-    React.useEffect(() => {
-    }, []);
-
     return (
         <div className={styles.root}>
             <svg

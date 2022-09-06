@@ -1,33 +1,37 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 
-import { setSortType, setIsOpen } from '../redux/slices/filterSlice';
+import { setSort } from '../redux/slices/filterSlice';
 
+export const sortCategories = [
+    { name: 'популярністю', sortProperty: 'rating' },
+    { name: 'зростанням ціни', sortProperty: 'price' },
+    { name: 'спаданням ціни', sortProperty: '-price' },
+    { name: 'алфавітом', sortProperty: 'title' }
+];
 
 export default function Sort() {
-    const sortCategories = [
-        { name: 'популярністю', sortProperty: 'rating' },
-        { name: 'зростанням ціни', sortProperty: 'price' },
-        { name: 'спаданням ціни', sortProperty: '-price' },
-        { name: 'алфавітом', sortProperty: 'title' }];
 
     const dispatch = useDispatch();
-    const { sortType, open } = useSelector((state) => state.filter);
+    const { sort } = useSelector((state) => state.filter);
+    const [open, setIsOpen] = React.useState(false);
 
-    const onChangeSortType = (obj) => {
-        dispatch(setSortType(obj));
-        onClickSortType();
+
+    const onChangeSort = (obj) => {
+        dispatch(setSort(obj));
+        onClickSort();
     }
-    const onClickSortType = () => {
-        dispatch(setIsOpen(!open));
+    const onClickSort = () => {
+        setIsOpen(!open);
     }
 
 
     const renderSortCategories = () => {
         return sortCategories.map((obj, i) => (
+
             <li
-                onClick={() => onChangeSortType(obj)}
-                className={sortType.sortProperty === obj.sortProperty ? 'active' : ''}
+                onClick={() => onChangeSort(obj)}
+                className={sort.sortProperty === obj.sortProperty ? 'active' : ''}
                 key={i}
             >
                 {obj.name}
@@ -51,7 +55,9 @@ export default function Sort() {
                     />
                 </svg>
                 <b>Сортувати за:</b>
-                <span onClick={onClickSortType}>{sortType.name}</span>
+                <span onClick={onClickSort}>
+                    {sort.name}
+                </span>
             </div>
             {open &&
                 <div className="sort__popup">
