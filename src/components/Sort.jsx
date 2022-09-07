@@ -14,21 +14,32 @@ export default function Sort() {
 
     const dispatch = useDispatch();
     const { sort } = useSelector((state) => state.filter);
-    const [open, setIsOpen] = React.useState(false);
+    const sortRef = React.useRef();
 
+    const [open, setIsOpen] = React.useState(false);
 
     const onChangeSort = (obj) => {
         dispatch(setSort(obj));
-        onClickSort();
+        setIsOpen(false);
     }
-    const onClickSort = () => {
-        setIsOpen(!open);
-    }
+
+    React.useEffect(() => {
+        const clickOutside = (event) => {
+            if (!event.path.includes(sortRef.current)) {
+                setIsOpen(false);
+            }
+        }
+        document.body.addEventListener('click', clickOutside)
+
+        //Эта функция выполнится когда компонент будет размонтирован (componentWillUnmount) \ при переходе на другую страницу 
+        return () => {
+            document.body.removeEventListener('click', clickOutside)
+        }
+    }, [])
 
 
     const renderSortCategories = () => {
         return sortCategories.map((obj, i) => (
-
             <li
                 onClick={() => onChangeSort(obj)}
                 className={sort.sortProperty === obj.sortProperty ? 'active' : ''}
@@ -40,7 +51,7 @@ export default function Sort() {
     };
 
     return (
-        <div className="sort">
+        <div ref={sortRef} className="sort">
             <div className="sort__label">
                 <svg
                     width="10"
@@ -55,7 +66,7 @@ export default function Sort() {
                     />
                 </svg>
                 <b>Сортувати за:</b>
-                <span onClick={onClickSort}>
+                <span onClick={() => setIsOpen(!open)}>
                     {sort.name}
                 </span>
             </div>
