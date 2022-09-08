@@ -5,9 +5,11 @@ import { addItem } from '../../redux/slices/cartSlice';
 
 const typeNames = ['тонке', 'традиційне'];
 
-export default function PizzaBlock({ id, title, price, imageUrl, types, sizes, isLoading }) {
+export default function PizzaBlock({ id, title, price, imageUrl, types, sizes }) {
     const dispatch = useDispatch();
     const cartItem = useSelector((state) => state.cart.items.find((obj) => obj.id === id));
+    const { status } = useSelector((state) => state.pizza);
+
     const [activeType, setActiveType] = React.useState(0);
     const [activeSize, setActiveSize] = React.useState(0);
 
@@ -26,12 +28,10 @@ export default function PizzaBlock({ id, title, price, imageUrl, types, sizes, i
         dispatch(addItem(item));
     }
 
-
-
     return (
         <div className="pizza-block-wrapper">
             <div className="pizza-block">
-                {isLoading ? (
+                {status === 'loading' ? (
                     <Sceleton />
                 ) : (
                     <>

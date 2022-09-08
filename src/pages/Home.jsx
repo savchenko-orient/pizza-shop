@@ -11,6 +11,7 @@ import Pagination from '../components/Pagination';
 
 import { setCategory, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
 import { sortCategories } from './../components/Sort';
+import { fetchPizzas } from '../redux/slices/pizzaSlice';
 
 export default function Home({ onAddToCart }) {
     const categories = ['Всі', "М'ясні", 'Вегетаріанські', 'Гриль', 'Гострі', 'Закриті',];
@@ -20,11 +21,10 @@ export default function Home({ onAddToCart }) {
 
     const isSearch = React.useRef(false);
     const isMounted = React.useRef(false);
-    const [items, setItems] = React.useState([]);
-    const [isLoading, setIsLoading] = React.useState(false);
 
     const searchValue = useSelector((state) => state.search.searchValue);
     const { category, sort, currentPage } = useSelector((state) => state.filter);
+    const { items, status } = useSelector((state) => state.pizza);
 
     const onClickCategory = (id) => {
         dispatch(setCategory(id));
@@ -32,26 +32,20 @@ export default function Home({ onAddToCart }) {
     const onChangePage = (number) => {
         dispatch(setCurrentPage(number))
     }
-    const fetchPizzas = () => {
+    const getPizzas = async () => {
         const sortBy = sort.sortProperty.replace('-', '');
         const order = sort.sortProperty.includes('-') ? 'desc' : 'asc';
         // asc(ASCending) - сортировка по возрастанию, desc(DESCending) - по убыванию
         // const search = searchValue ? `&search=${searchValue}` : '';
 
-        async function fetchData() {
-            try {
-                setIsLoading(true);
-                const [itemsResponse] = await Promise.all([
-                    axios.get(`https://630a2c2c324991003281df9d.mockapi.io/items?page=${currentPage}&limit=4&category=${category}&sortBy=${sortBy}&order=${order}`)
-                ]);
-                setItems(itemsResponse.data)
-                setIsLoading(false);
-            } catch (error) {
-                alert('Помилка під час запиту данних!');
-                console.error('error: ', error);
-            }
-        }
-        fetchData();
+        dispatch(
+            fetchPizzas({
+                sortBy,
+                order,
+                category,
+                currentPage
+            }));
+        window.scrollTo(0, 0);
     };
 
 
@@ -88,13 +82,8 @@ export default function Home({ onAddToCart }) {
 
     // Если был первый рендерб то запрашиваем пиццы
     React.useEffect(() => {
-        window.scrollTo(0, 0);
+        getPizzas();
 
-        if (!isSearch.current) {
-            fetchPizzas();
-        }
-
-        isSearch.current = false;
     }, [category, sort, currentPage]);
 
     const filtredItems = items.filter(item =>
@@ -112,18 +101,25 @@ export default function Home({ onAddToCart }) {
                 <Sort />
             </div>
             <h2 className="content__title">{categories[category]}</h2>
-            <div className="content__items">
-                {(isLoading ? [...Array(12)] : filtredItems).map((item, index) => {
-                    return (
-                        <PizzaBlock
-                            key={index}
-                            isLoading={isLoading}
-                            onPlus={(obj) => onAddToCart(obj)}
-                            {...item}
-                        />
-                    )
-                })}
-            </div>
+            {status === 'error' ? (
+                <div className="content__error-info">
+                    <h1 >Сталася помилка😕</h1>
+                    <p>Нажаль, нам не вдалося отримати піци. Спробуйте повторити пізніше.</p>
+                </div>
+            ) : (
+                <div className="content__items">
+                    {(status === 'loading' ? [...Array(12)] : filtredItems).map((item, index) => {
+                        return (
+                            <PizzaBlock
+                                key={index}
+                                onPlus={(obj) => onAddToCart(obj)}
+                                {...item}
+                            />
+                        )
+                    })}
+                </div>
+            )}
+
             <Pagination currentPage={currentPage} onChangePage={onChangePage} />
         </div>
     )
