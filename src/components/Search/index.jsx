@@ -1,15 +1,15 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
-import { setSearchValue } from '../../redux/slices/searchSlice';
 import styles from './Search.module.scss';
 import debounce from 'lodash.debounce';
+import { selectSearchValue, setSearchValue } from '../../redux/slices/filterSlice';
 
 
 export default function Search() {
-    const [value, setValue] = React.useState('');
-    const searchValue = useSelector((state) => state.search.searchValue);
-    const inputRef = React.useRef();
     const dispatch = useDispatch();
+    const inputRef = React.useRef();
+    const [value, setValue] = React.useState('');
+    const searchValue = useSelector(selectSearchValue);
 
     const debouncedSearch = React.useMemo(
         () =>
@@ -71,7 +71,7 @@ export default function Search() {
                 value={value}
                 onChange={(event) => onChangeSearchValue(event.target.value)}
                 className={styles.search}
-                placeholder="Поиск пиццы..."
+                placeholder="Пошук піци..."
             />
             {searchValue && (
                 <svg

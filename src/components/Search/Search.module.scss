@@ -9,10 +9,15 @@
   width: 300px;
   border-radius: 10px;
   font-style: 16px;
-  transition: all 0.15s ease-in-out;
+  transition: all 0.4s ease-in-out;
+  background: transparent;
 
   &:focus {
     border: 1px solid rgba(0, 0, 0, 0.9);
+    box-shadow: 5px 10px 20px -6px hsla(0, 0%, 0%, 0.5);
+  }
+  &:hover {
+    box-shadow: 5px 10px 20px -6px hsla(0, 0%, 0%, 0.5);
   }
 }
 .icon {

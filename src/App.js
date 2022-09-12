@@ -11,10 +11,10 @@ import Cart from './pages/Cart';
 
 function App() {
 
-  const [cartItems, setCartItems] = React.useState([]);
-  const onAddToCart = async (obj) => {
-    setCartItems((prev) => [...prev, obj]);  /*prev - это предыдущие данные из переменной в useState. в данном случае из cartItems*/
-  };
+  // const [cartItems, setCartItems] = React.useState([]);
+  // const onAddToCart = async (obj) => {
+  //   setCartItems((prev) => [...prev, obj]);  /*prev - это предыдущие данные из переменной в useState. в данном случае из cartItems*/
+  // };
 
 
   return (
@@ -28,7 +28,7 @@ function App() {
             element={
               <Home
 
-                onAddToCart={onAddToCart}
+              // onAddToCart={onAddToCart}
               />
             }
           />
@@ -41,7 +41,7 @@ function App() {
             path="/cart"
             element={
               <Cart
-                cartItems={cartItems}
+              // cartItems={cartItems}
               />}
           />
         </Routes>

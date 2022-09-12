@@ -1,14 +1,15 @@
 import React from 'react';
 import Sceleton from './Sceleton';
 import { useDispatch, useSelector } from 'react-redux';
-import { addItem } from '../../redux/slices/cartSlice';
+import { addItem, selectCartItemById } from '../../redux/slices/cartSlice';
+import { selectPizza } from '../../redux/slices/pizzaSlice';
 
 const typeNames = ['тонке', 'традиційне'];
 
 export default function PizzaBlock({ id, title, price, imageUrl, types, sizes }) {
     const dispatch = useDispatch();
-    const cartItem = useSelector((state) => state.cart.items.find((obj) => obj.id === id));
-    const { status } = useSelector((state) => state.pizza);
+    const cartItem = useSelector(selectCartItemById(id));
+    const { status } = useSelector(selectPizza);
 
     const [activeType, setActiveType] = React.useState(0);
     const [activeSize, setActiveSize] = React.useState(0);

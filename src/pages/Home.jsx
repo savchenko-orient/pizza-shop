@@ -1,5 +1,4 @@
 import React from 'react'
-import axios from 'axios';
 import qs from 'qs';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,9 +8,9 @@ import Categories from '../components/Categiries';
 import Sort from '../components/Sort';
 import Pagination from '../components/Pagination';
 
-import { setCategory, setCurrentPage, setFilters } from '../redux/slices/filterSlice';
+import { selectSearchValue, setCategory, setCurrentPage, setFilters, selectFilter } from '../redux/slices/filterSlice';
 import { sortCategories } from './../components/Sort';
-import { fetchPizzas } from '../redux/slices/pizzaSlice';
+import { fetchPizzas, selectPizza } from '../redux/slices/pizzaSlice';
 
 export default function Home({ onAddToCart }) {
     const categories = ['Всі', "М'ясні", 'Вегетаріанські', 'Гриль', 'Гострі', 'Закриті',];
@@ -22,9 +21,9 @@ export default function Home({ onAddToCart }) {
     const isSearch = React.useRef(false);
     const isMounted = React.useRef(false);
 
-    const searchValue = useSelector((state) => state.search.searchValue);
-    const { category, sort, currentPage } = useSelector((state) => state.filter);
-    const { items, status } = useSelector((state) => state.pizza);
+    const searchValue = useSelector(selectSearchValue);
+    const { category, sort, currentPage } = useSelector(selectFilter);
+    const { items, status } = useSelector(selectPizza);
 
     const onClickCategory = (id) => {
         dispatch(setCategory(id));
