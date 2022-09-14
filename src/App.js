@@ -6,44 +6,21 @@ import Header from './components/Header.jsx';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Cart from './pages/Cart';
+import FullPizza from './pages/FullPizza';
 
 
 
 function App() {
-
-  // const [cartItems, setCartItems] = React.useState([]);
-  // const onAddToCart = async (obj) => {
-  //   setCartItems((prev) => [...prev, obj]);  /*prev - это предыдущие данные из переменной в useState. в данном случае из cartItems*/
-  // };
-
-
   return (
     <div className="wrapper">
       <Header />
       <div className="content">
 
         <Routes>
-          <Route
-            exact path="/"
-            element={
-              <Home
-
-              // onAddToCart={onAddToCart}
-              />
-            }
-          />
-          <Route
-            path="*"
-            element={
-              <NotFound />
-            } />
-          <Route
-            path="/cart"
-            element={
-              <Cart
-              // cartItems={cartItems}
-              />}
-          />
+          <Route exact path="/" element={<Home />} />
+          <Route path="*" element={<NotFound />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/pizza/:id" element={<FullPizza />} />
         </Routes>
       </div>
     </div>

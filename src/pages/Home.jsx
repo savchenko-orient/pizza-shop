@@ -1,6 +1,6 @@
 import React from 'react'
 import qs from 'qs';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import PizzaBlock from '../components/PizzaBlock';
@@ -8,11 +8,12 @@ import Categories from '../components/Categiries';
 import Sort from '../components/Sort';
 import Pagination from '../components/Pagination';
 
-import { selectSearchValue, setCategory, setCurrentPage, setFilters, selectFilter } from '../redux/slices/filterSlice';
+import { setCategory, setCurrentPage, setFilters, selectFilter } from '../redux/slices/filterSlice';
 import { sortCategories } from './../components/Sort';
 import { fetchPizzas, selectPizza } from '../redux/slices/pizzaSlice';
+import Sceleton from '../components/PizzaBlock/Sceleton';
 
-export default function Home({ onAddToCart }) {
+export default function Home() {
     const categories = ['Всі', "М'ясні", 'Вегетаріанські', 'Гриль', 'Гострі', 'Закриті',];
 
     const navigate = useNavigate();
@@ -21,8 +22,7 @@ export default function Home({ onAddToCart }) {
     const isSearch = React.useRef(false);
     const isMounted = React.useRef(false);
 
-    const searchValue = useSelector(selectSearchValue);
-    const { category, sort, currentPage } = useSelector(selectFilter);
+    const { category, sort, currentPage, searchValue } = useSelector(selectFilter);
     const { items, status } = useSelector(selectPizza);
 
     const onClickCategory = (id) => {
@@ -35,7 +35,7 @@ export default function Home({ onAddToCart }) {
         const sortBy = sort.sortProperty.replace('-', '');
         const order = sort.sortProperty.includes('-') ? 'desc' : 'asc';
         // asc(ASCending) - сортировка по возрастанию, desc(DESCending) - по убыванию
-        // const search = searchValue ? `&search=${searchValue}` : '';
+        const search = searchValue ? `&search=${searchValue}` : '';
 
         dispatch(
             fetchPizzas({
@@ -89,6 +89,16 @@ export default function Home({ onAddToCart }) {
         item.title.toLowerCase().includes(searchValue.toLowerCase())
     );
 
+
+    const pizzas = filtredItems.map((obj) => {
+        return (
+            <Link key={obj.id} to={`/pizza/${obj.id}`}>
+                <PizzaBlock {...obj} />
+            </Link>
+        )
+    });
+    const skeletons = [...new Array(4)].map((_, index) => <Sceleton key={index} />);
+
     return (
         <div className="container">
             <div className="content__top">
@@ -107,15 +117,7 @@ export default function Home({ onAddToCart }) {
                 </div>
             ) : (
                 <div className="content__items">
-                    {(status === 'loading' ? [...Array(12)] : filtredItems).map((item, index) => {
-                        return (
-                            <PizzaBlock
-                                key={index}
-                                onPlus={(obj) => onAddToCart(obj)}
-                                {...item}
-                            />
-                        )
-                    })}
+                    {status === 'loading' ? skeletons : pizzas}
                 </div>
             )}
 
@@ -128,3 +130,13 @@ export default function Home({ onAddToCart }) {
 
 
 
+{/* <Link
+    to={`/pizza/${item.id}`}
+    key={index}
+
+>
+    <PizzaBlock
+        key={index}
+        {...item}
+    />
+</Link> */}
