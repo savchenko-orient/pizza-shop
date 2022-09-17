@@ -3,7 +3,7 @@ import React from "react";
 type CategoriesProps = {
   categories: string[];
   value: number;
-  onClickCategory: any;
+  onClickCategory: (idx: number) => void;
 };
 
 const Categories: React.FC<CategoriesProps> = ({
