@@ -1,11 +1,9 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import styles from "./Search.module.scss";
 import debounce from "lodash.debounce";
-import {
-  selectSearchValue,
-  setSearchValue,
-} from "../../redux/slices/filterSlice";
+import styles from "./Search.module.scss";
+import { useSelector, useDispatch } from "react-redux";
+import { setSearchValue } from "../../redux/filter/slice";
+import { selectSearchValue } from "../../redux/filter/selectors";
 
 const Search: React.FC = () => {
   const dispatch = useDispatch();
