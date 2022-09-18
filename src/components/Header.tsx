@@ -16,8 +16,6 @@ const Header: React.FC = () => {
   const { pathname } = useLocation();
 
   React.useEffect(() => {
-    console.log("isMounted.current: ", isMounted);
-
     if (isMounted.current) {
       const json = JSON.stringify(items);
       localStorage.setItem("cart", json);

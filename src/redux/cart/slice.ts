@@ -3,6 +3,7 @@ import { calcTotalCount } from "../../utils/calcTotalCount";
 import { calcTotalPrice } from "../../utils/calcTotalPrice";
 import { getCartFromLS } from "../../utils/getCartFromLS";
 import { CartItemType, CartSliceState } from "./types";
+import { findCartItem } from "./../../utils/findCartItem";
 
 const initialState: CartSliceState = getCartFromLS();
 
@@ -11,9 +12,10 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addItem(state, action: PayloadAction<CartItemType>) {
-      const findItem = state.items.find((obj) => obj.id === action.payload.id);
-      if (findItem) {
-        findItem.count++;
+      const item = findCartItem(state.items, action);
+
+      if (item) {
+        item.count++;
       } else {
         state.items.push({
           ...action.payload,
@@ -24,25 +26,22 @@ const cartSlice = createSlice({
       state.totalCount = calcTotalCount(state.items);
     },
 
-    minusItem(state, action: PayloadAction<string>) {
-      const findItem = state.items.find((obj) => obj.id === action.payload);
-      if (findItem) {
-        if (findItem.count > 0) {
-          findItem.count--;
+    minusItem(state, action: PayloadAction<CartItemType>) {
+      const item = findCartItem(state.items, action);
+      if (item) {
+        if (item.count > 0) {
+          item.count--;
         }
       }
-      state.totalPrice = state.items.reduce((sum, obj) => {
-        return obj.price * obj.count + sum;
-      }, 0);
-      state.totalCount = state.items.reduce((sum, obj) => obj.count + sum, 0);
+      state.totalPrice = calcTotalPrice(state.items);
+      state.totalCount = calcTotalCount(state.items);
     },
 
-    removeItem(state, action: PayloadAction<string>) {
-      state.items = state.items.filter((obj) => obj.id !== action.payload);
-      state.totalPrice = state.items.reduce((sum, obj) => {
-        return obj.price * obj.count + sum;
-      }, 0);
-      state.totalCount = state.items.reduce((sum, obj) => obj.count + sum, 0);
+    removeItem(state, action: PayloadAction<CartItemType>) {
+      const item = findCartItem(state.items, action);
+      state.items = state.items.filter((obj) => obj !== item);
+      state.totalPrice = calcTotalPrice(state.items);
+      state.totalCount = calcTotalCount(state.items);
     },
 
     clearItems(state) {
