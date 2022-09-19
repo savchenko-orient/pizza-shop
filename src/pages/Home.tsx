@@ -14,6 +14,7 @@ import { setCategory, setCurrentPage } from "../redux/filter/slice";
 import { selectFilter } from "../redux/filter/selectors";
 import { fetchPizzas } from "../redux/pizza/acyncActions";
 import { selectPizza } from "../redux/pizza/selectors";
+import { calcPages } from "../utils/calcPages";
 
 const Home: React.FC = () => {
   const categories: string[] = [
@@ -68,10 +69,20 @@ const Home: React.FC = () => {
     item.title.toLowerCase().includes(searchValue.toLowerCase())
   );
 
-  const pizzas = filtredItems.map((obj: any) => {
-    return <PizzaBlock key={obj.id} {...obj} />;
-  });
-  const skeletons = [...new Array(4)].map((_, index) => (
+  const { firstPostIndex, lastPostIndex, pages } = calcPages(
+    filtredItems,
+    currentPage
+  );
+  const pizzas = filtredItems
+    .slice(firstPostIndex, lastPostIndex)
+    .map((obj: any) => {
+      return <PizzaBlock key={obj.id} {...obj} />;
+    });
+
+  // const pizzas = filtredItems.map((obj: any) => {
+  //   return <PizzaBlock key={obj.id} {...obj} />;
+  // });
+  const skeletons = [...new Array(8)].map((_, index) => (
     <Sceleton key={index} />
   ));
 
@@ -99,7 +110,13 @@ const Home: React.FC = () => {
         </div>
       )}
 
-      <Pagination currentPage={currentPage} onChangePage={onChangePage} />
+      {pages.length > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          onChangePage={onChangePage}
+          pages={pages}
+        />
+      )}
     </div>
   );
 };
