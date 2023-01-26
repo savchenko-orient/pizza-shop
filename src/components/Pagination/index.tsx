@@ -13,8 +13,6 @@ const Pagination: React.FC<PaginationProps> = ({
   pages,
   onChangePage,
 }) => {
-  console.log("pages.length: ", pages.length);
-  console.log("currentPage: ", currentPage);
   return (
     <div className={styles.root}>
       <button
